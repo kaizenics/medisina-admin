@@ -3,7 +3,7 @@ import ModeToggle from '@/components/ui/ModeToggle.vue'
 </script>
 
 <template>
-    <nav class="container flex flex-col">
+    <nav class="container mx-auto px-0 flex flex-col">
         <div class="my-7">
             <ul class="flex justify-between items-center">
                 <li class="text-slate-700 dark:text-slate-100 font-montserrat font-bold text-4xl"><a
