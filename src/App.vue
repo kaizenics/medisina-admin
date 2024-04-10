@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Navbar from './components/Navbar.vue'
+import Navbar from './components/NavigationBar.vue' 
 </script>
 
 <template>
@@ -7,7 +7,7 @@ import Navbar from './components/Navbar.vue'
     <main>
         <Navbar />
         <div>
-            <h2 class="text-red-600 text-3xl">Test App</h2>
+
         </div>
     </main>
 </template>
