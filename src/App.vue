@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import Navbar from './components/Navbar.vue'
 </script>
 
-<template >
- <main>
-  <h2 class="text-red-600 text-3xl">Test App</h2>
- </main>
-</template>
+<template>
 
+    <main>
+        <Navbar />
+        <div>
+            <h2 class="text-red-600 text-3xl">Test App</h2>
+        </div>
+    </main>
+</template>
