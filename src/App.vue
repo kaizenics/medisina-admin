@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import Navbar from './components/NavigationBar.vue' 
+import LandingPage from './components/LandingPage.vue';
+import NavigationBar from './components/NavigationBar.vue' 
 </script>
 
 <template>
 
     <main>
-        <Navbar />
-        <div>
-
-        </div>
+        <NavigationBar />
+        <LandingPage />
     </main>
 </template>
