@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import ModeToggle from '@/components/ui/ModeToggle.vue'
+
 </script>
 
 <template>
-    <nav class="container mx-auto px-0 flex flex-col">
+    <nav class="container mx-auto flex flex-col">
         <div class="my-7">
             <ul class="flex justify-between items-center">
                 <li class="text-slate-700 dark:text-slate-100 font-montserrat font-bold text-4xl"><a
@@ -15,7 +16,10 @@ import ModeToggle from '@/components/ui/ModeToggle.vue'
                 </ul>
                 <ul class="flex space-x-4">
                     <li class="font-monserrat font-semibold text-lg py-3"><a href="#">Login</a></li>
-                    <button class="font-montserrat text-md bg-slate-800 text-white py-3 px-4">Sign up for free</button>
+                    <button
+                        class="font-montserrat text-md bg-slate-800 text-white py-3 px-4 rounded-sm hover:bg-slate-900 transition-colors duration-300">Sign
+                        up for
+                        free</button>
                     <div class="py-2">
                         <ModeToggle />
                     </div>
