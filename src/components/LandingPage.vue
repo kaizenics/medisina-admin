@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import SeparatorContainer from '@/components/ui/separator/SeparatorComponent.vue'
+import { Badge } from '@/components/ui/badge'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
 import doctorImg from '@/assets/images/doctor.png'
 import medicineImg from '@/assets/images/medicine.png'
@@ -18,6 +20,7 @@ import doctorFour from '@/assets/images/doctors-4.jpg'
         <div class="container flex py-32">
             <div class="font-montserrat flex flex-col mx-2">
                 <div class="space-y-4">
+                    <Badge>Welcome to the</Badge>
                     <h1 class="text-6xl font-regular">Most trusted</h1>
                     <span class="text-6xl font-bold">online
                         pharmacy.</span>
@@ -138,6 +141,72 @@ import doctorFour from '@/assets/images/doctors-4.jpg'
     </section>
 
     <section>
+        <div class="container flex flex-col">
+            <div class="my-20">
+                <h1 class="font-montserrat text-7xl font-semibold">FAQ</h1>
+                <p class="font-montserrat text-md py-10 font-semibold">We have compiled a list of frequently asked
+                    questions to help
+                    you
+                    understand how our
+                    pharmacy works and how you can order prescription drugs online.</p>
+                <div>
+                    <Accordion type="single" collapsible>
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger class="text-2xl">What is Medisina and how do I use it?</AccordionTrigger>
+                            <AccordionContent class="text-xl">
+                                At our pharmacy, we believe that taking care of your health should never be a hassle. So
+                                whether you're managing a chronic condition or just looking for ways to improve your
+                                overall wellness, we're here to help you every step of the way. Thank you for choosing
+                                us as your trusted source for all of your healthcare needs.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-2">
+                            <AccordionTrigger class="text-2xl">Is it accessible?</AccordionTrigger>
+                            <AccordionContent class="text-xl">
+                                Yes, it is. Our pharmacy is accessible to everyone. We offer a wide range of
+                                prescription
+                                and over-the-counter drugs, as well as wellness products, all available to you with just
+                                a few clicks. Our licensed pharmacists are available to answer any questions you may
+                                have
+                                about your medication and offer expert advice on managing your health.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-3">
+                            <AccordionTrigger class="text-2xl">What is the return policy for products purchased from
+                                Medisina?</AccordionTrigger>
+                            <AccordionContent class="text-xl">
+                                We offer a 30-day return policy for unused and unopened products. Please refer to our
+                                Returns and Refunds Policy for more details.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-4">
+                            <AccordionTrigger class="text-2xl">What payment methods are accepted by Medisina?
+                            </AccordionTrigger>
+                            <AccordionContent class="text-xl">
+                                We accept all major credit cards, including Visa, MasterCard, and American Express. We
+                                also accept payment through PayPal.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-5">
+                            <AccordionTrigger class="text-2xl">Can I track my order once it has been shipped?
+                            </AccordionTrigger>
+                            <AccordionContent class="text-xl">
+                                Yes, you will receive a tracking number via email once your order has been shipped. You
+                                can use this tracking number to track your order on our website.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-6">
+                            <AccordionTrigger class="text-2xl">How can I contact customer support for assistance?
+                            </AccordionTrigger>
+                            <AccordionContent class="text-xl">
+                                You can contact our customer support team via email at support@medisina.com or by phone
+                                at 1-800-MEDISINA. Our support team is available 24/7 to assist you
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </div>
+            </div>
 
+        </div>
     </section>
 </template>
