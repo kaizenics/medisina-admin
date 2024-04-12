@@ -131,9 +131,10 @@ import doctorFour from '@/assets/images/doctors-4.jpg'
                 <div class="flex justify-end pt-10">
                     <div class="relative">
                         <input
-                            class="w-[1000px] h-[56px] py-4 px-2 bg-transparent text-gray-200 border border-gray-200 rounded-none"
+                            class="w-[1000px] h-[56px] py-4 px-2 bg-transparent text-gray-200 border border-gray-200 dark:text-gray-900 dark:border-gray-900 rounded-none"
                             type="text">
-                        <button class="absolute font-montserrat bg-gray-200 py-4 px-10 top-0 right-0">Subscribe</button>
+                        <button
+                            class="absolute font-montserrat bg-gray-200 dark:bg-gray-900 py-4 px-10 top-0 right-0">Subscribe</button>
                     </div>
                 </div>
             </div>
