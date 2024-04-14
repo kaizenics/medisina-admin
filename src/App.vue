@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import LandingPage from './pages/LandingPage.vue';
-import NavigationBar from './components/NavigationBar.vue' 
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
 
     <main>
-        <NavigationBar />
-        <LandingPage />
+        <RouterView />
     </main>
 </template>

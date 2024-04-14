@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import SeparatorContainer from '@/components/ui/separator/SeparatorComponent.vue'
+import FooterComponent from '@/components/FooterComponent.vue'
+import NavigationBar from '@/components/NavigationBar.vue'
+
 import { Badge } from '@/components/ui/badge'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
@@ -15,7 +18,9 @@ import doctorTwo from '@/assets/images/doctors-2.jpg'
 import doctorThree from '@/assets/images/doctors-3.jpg'
 import doctorFour from '@/assets/images/doctors-4.jpg'
 </script>
+
 <template>
+    <NavigationBar />
     <section>
         <div class="container flex py-32">
             <div class="font-montserrat flex flex-col mx-2">
@@ -24,7 +29,6 @@ import doctorFour from '@/assets/images/doctors-4.jpg'
                     <h1 class="text-6xl font-regular">Most trusted</h1>
                     <span class="text-6xl font-bold">online
                         pharmacy.</span>
-
                 </div>
                 <p class="text-lg font-regular my-4">Our licensed pharmacists are available to answer any questions you
                     may
@@ -210,4 +214,5 @@ import doctorFour from '@/assets/images/doctors-4.jpg'
 
         </div>
     </section>
+    <FooterComponent />
 </template>
