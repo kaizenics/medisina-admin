@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import SeparatorContainer from '@/components/ui/separator/SeparatorComponent.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
@@ -17,6 +18,7 @@ import doctorOne from '@/assets/images/doctors-1.jpg'
 import doctorTwo from '@/assets/images/doctors-2.jpg'
 import doctorThree from '@/assets/images/doctors-3.jpg'
 import doctorFour from '@/assets/images/doctors-4.jpg'
+
 </script>
 
 <template>
@@ -82,7 +84,7 @@ import doctorFour from '@/assets/images/doctors-4.jpg'
         </div>
     </section>
 
-    <section>
+    <section id="experts">
         <div>
             <div class="container flex py-28">
                 <div class="font-montserrat flex flex-col mx-2">
@@ -124,7 +126,7 @@ import doctorFour from '@/assets/images/doctors-4.jpg'
         </div>
     </section>
 
-    <section class="bg-gray-900 dark:bg-gray-200">
+    <section id="newsletter" class="bg-gray-900 dark:bg-gray-200">
         <div class="container mx-auto flex flex-col">
             <div class="flex flex-col items-center my-20">
                 <h1 class="font-montserrat text-5xl py-6 text-gray-200 dark:text-slate-900 font-semibold">Sign up to our
@@ -145,7 +147,7 @@ import doctorFour from '@/assets/images/doctors-4.jpg'
         </div>
     </section>
 
-    <section>
+    <section id="faq">
         <div class="container flex flex-col">
             <div class="my-20">
                 <h1 class="font-montserrat text-7xl font-semibold">FAQ</h1>

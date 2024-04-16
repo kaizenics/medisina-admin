@@ -19,12 +19,12 @@ const goToSignUp = () => {
         <nav class="container mx-auto flex flex-col">
             <div class="my-14">
                 <ul class="flex justify-between items-center">
-                    <li class="text-gray-800 dark:text-gray-100 font-montserrat font-bold text-4xl"><router-link
-                            to="/">Medisina</router-link></li>
+                    <li class="text-emerald-500 font-montserrat font-bold text-4xl"><a href="/">
+                            Medisina</a></li>
                     <ul class="font-montserrat text-md flex space-x-10">
-                        <li><router-link to="/experts">Our Experts</router-link></li>
-                        <li><router-link to="/newsletter">Newsletter</router-link></li>
-                        <li><router-link to="/faqs">FAQs</router-link></li>
+                        <li><a href="#experts">Our Experts</a></li>
+                        <li><a href="#newsletter">Newsletter</a></li>
+                        <li><a href="#faq">FAQs</a></li>
                     </ul>
                     <ul class="flex space-x-4">
                         <h1 class="font-monserrat font-semibold text-lg py-3 cursor-pointer" @click="goToLogin">
