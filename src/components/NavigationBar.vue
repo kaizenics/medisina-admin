@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import ModeToggle from '@/components/ui/ModeToggle.vue';
+import ModeToggle from '@/components/ui/toggle/ModeToggle.vue';
 
 const router = useRouter();
 
