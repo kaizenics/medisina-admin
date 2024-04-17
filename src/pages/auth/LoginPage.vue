@@ -70,7 +70,8 @@ function handleSubmit(event: Event) {
                         <h1 class="text-2xl font-bold dark:text-gray-900">Login</h1>
                         <div class="space-y-1">
                             <Label for="username" class="dark:text-gray-900">Username</Label>
-                            <Input v-model="username" id="username" type="text" class="dark:bg-gray-100 text-gray-900"
+                            <Input v-model="username" id="username" type="text"
+                                class="border-none dark:bg-gray-100 text-gray-900"
                                 :class="{ 'border-red-500': usernameWarning }" />
                             <span class="text-sm text-red-500">{{ usernameWarning }}</span>
                         </div>
@@ -78,7 +79,8 @@ function handleSubmit(event: Event) {
                         <div class="space-y-1">
                             <Label for="password" class="dark:text-gray-900">Password</Label>
                             <Input v-model="password" id="password" type="password"
-                                class="dark:bg-gray-100 text-gray-900" :class="{ 'border-red-500': passwordWarning }" />
+                                class="border-none dark:bg-gray-100 text-gray-900"
+                                :class="{ 'border-red-500': passwordWarning }" />
                             <span class="text-sm text-red-500">{{ passwordWarning }}</span>
                         </div>
 
