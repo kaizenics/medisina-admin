@@ -46,7 +46,7 @@ function handleSubmit(event: Event) {
         const savedPassword = localStorage.getItem('password')
 
         if (username.value === savedUsername && password.value === savedPassword) {
-            router.push('/dashboard')
+            router.push('/home')
         } else {
             alert('Invalid username or password')
         }
