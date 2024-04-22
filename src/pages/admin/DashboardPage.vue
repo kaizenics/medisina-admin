@@ -46,7 +46,6 @@ import {
                     </h2>
                     <div class="flex items-center space-x-2">
                         <DateRangePicker />
-                        <Button>Download</Button>
                     </div>
                 </div>
                 <Tabs default-value="overview" class="space-y-4">

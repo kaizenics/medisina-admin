@@ -3,6 +3,7 @@ import LandingPage from '../pages/LandingPage.vue'
 import HomePage from '../pages/HomePage.vue'
 import LoginPage from '../pages/auth/LoginPage.vue'
 import SignUpPage from '../pages/auth/SignupPage.vue'
+import AdminLogin from '../pages/auth/AdminLogin.vue'
 import Dashboard from '../pages/admin/DashboardPage.vue'
 import Orders from '../pages/admin/OrdersPage.vue'
 import Settings from '../pages/admin/SettingsPage.vue'
@@ -31,7 +32,7 @@ const router = createRouter({
       component: SignUpPage
     },
     {
-      path: '/dashboard',
+      path: '/dashboard/home',
       name: 'dashboard',
       component: Dashboard
     },
@@ -44,6 +45,16 @@ const router = createRouter({
       path: '/dashboard/settings',
       name: 'settings',
       component: Settings
+    },
+    {
+      path: '/dashboard/settings',
+      name: 'settings',
+      component: Settings
+    },
+    {
+      path: '/login/admin',
+      name: 'admin',
+      component: AdminLogin
     }
   ]
 })
