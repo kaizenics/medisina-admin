@@ -3,13 +3,10 @@ import { useRouter } from 'vue-router';
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import NavigationBar from '@/components/NavigationBar.vue';
 import { ref } from 'vue'
 
 /* Images */
 
-import handImg from '@/assets/images/hand.png'
 
 const router = useRouter()
 

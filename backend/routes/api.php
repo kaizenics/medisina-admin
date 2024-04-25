@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [LoginController::class, 'check']);
 
 Route::post('/register', [RegisterController::class, 'store']);
+
+Route::post('/logout', [LoginController::class, 'logout']);
+
+Route::post('/admin', [AdminController::class, 'admin']);

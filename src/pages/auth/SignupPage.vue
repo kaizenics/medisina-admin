@@ -57,7 +57,7 @@ async function handleSubmit(event: Event) {
     if (validateForm()) {
         try {
             await axios.post('http://127.0.0.1:8000/api/register', {
-                username: username.value,
+                name: username.value,
                 email: email.value,
                 password: password.value,
             });

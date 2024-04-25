@@ -9,20 +9,23 @@ import { ref } from 'vue'
 
 const router = useRouter()
 
-const name = ref('')
+const email = ref('')
 const password = ref('')
 
-const usernameWarning = ref('')
+const emailWarning = ref('')
 const passwordWarning = ref('')
 
 function validateForm() {
     let isValid = true
 
-    if (!name.value.trim()) {
-        usernameWarning.value = 'Username is required'
+    if (!email.value.trim()) {
+        emailWarning.value = 'Email is required'
+        isValid = false
+    } else if (!/\S+@\S+\.\S+/.test(email.value.trim())) {
+        emailWarning.value = 'Invalid email format'
         isValid = false
     } else {
-        usernameWarning.value = ''
+        emailWarning.value = ''
     }
 
     if (!password.value.trim()) {
@@ -39,24 +42,20 @@ async function handleSubmit(event: Event) {
     event.preventDefault();
     if (validateForm()) {
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/login', {
-                name: name.value,
+            await axios.post('http://127.0.0.1:8000/api/login', {
+                email: email.value,
                 password: password.value,
             });
 
-            if (response.data.token) {
-                localStorage.setItem('token', response.data.token);
-                router.push('/home');
-            } else {
-                alert('Invalid username or password');
-            }
+            alert('Login successful');
+            router.push('/home');
+
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
         }
     }
 }
-
 </script>
 
 <template>
@@ -74,11 +73,11 @@ async function handleSubmit(event: Event) {
                     <div class="flex flex-col space-y-4 py-10 px-5">
                         <h1 class="text-2xl font-bold dark:text-gray-900">Login</h1>
                         <div class="space-y-1">
-                            <Label for="username" class="dark:text-gray-900">Username</Label>
-                            <Input v-model="name" id="username" type="text"
+                            <Label for="email" class="dark:text-gray-900">Email Address</Label>
+                            <Input v-model="email" id="username" type="text"
                                 class="border-none dark:bg-gray-100 text-gray-900"
-                                :class="{ 'border-red-500': usernameWarning }" />
-                            <span class="text-sm text-red-500">{{ usernameWarning }}</span>
+                                :class="{ 'border-red-500': emailWarning }" />
+                            <span class="text-sm text-red-500">{{ emailWarning }}</span>
                         </div>
 
                         <div class="space-y-1">
