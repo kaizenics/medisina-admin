@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router';
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import axios from 'axios';
 import { ref } from 'vue'
 
 const router = useRouter()
@@ -52,16 +52,25 @@ function validateForm() {
     return isValid
 }
 
-function handleSubmit(event: Event) {
-    event.preventDefault()
+async function handleSubmit(event: Event) {
+    event.preventDefault();
     if (validateForm()) {
-        localStorage.setItem('username', username.value)
-        localStorage.setItem('email', email.value)
-        localStorage.setItem('password', password.value)
+        try {
+            await axios.post('http://127.0.0.1:8000/api/register', {
+                username: username.value,
+                email: email.value,
+                password: password.value,
+            });
 
-        router.push('/login');
+            alert('User registered successfully. Please login.');
+            router.push('/login');
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
     }
 }
+
 </script>
 
 <template>

@@ -3,14 +3,13 @@ import { useRouter } from 'vue-router';
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import NavigationBar from '@/components/NavigationBar.vue';
+import axios from 'axios';
 import { ref } from 'vue'
 
 
 const router = useRouter()
 
-const username = ref('')
+const name = ref('')
 const password = ref('')
 
 const usernameWarning = ref('')
@@ -19,7 +18,7 @@ const passwordWarning = ref('')
 function validateForm() {
     let isValid = true
 
-    if (!username.value.trim()) {
+    if (!name.value.trim()) {
         usernameWarning.value = 'Username is required'
         isValid = false
     } else {
@@ -36,19 +35,28 @@ function validateForm() {
     return isValid
 }
 
-function handleSubmit(event: Event) {
-    event.preventDefault()
+async function handleSubmit(event: Event) {
+    event.preventDefault();
     if (validateForm()) {
-        const savedUsername = localStorage.getItem('username')
-        const savedPassword = localStorage.getItem('password')
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/login', {
+                name: name.value,
+                password: password.value,
+            });
 
-        if (username.value === savedUsername && password.value === savedPassword) {
-            router.push('/home')
-        } else {
-            alert('Invalid username or password')
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                router.push('/home');
+            } else {
+                alert('Invalid username or password');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
         }
     }
 }
+
 </script>
 
 <template>
@@ -67,7 +75,7 @@ function handleSubmit(event: Event) {
                         <h1 class="text-2xl font-bold dark:text-gray-900">Login</h1>
                         <div class="space-y-1">
                             <Label for="username" class="dark:text-gray-900">Username</Label>
-                            <Input v-model="username" id="username" type="text"
+                            <Input v-model="name" id="username" type="text"
                                 class="border-none dark:bg-gray-100 text-gray-900"
                                 :class="{ 'border-red-500': usernameWarning }" />
                             <span class="text-sm text-red-500">{{ usernameWarning }}</span>
