@@ -3,27 +3,29 @@ import { useRouter } from 'vue-router';
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import axios from 'axios';
 import { ref } from 'vue'
-
-/* Images */
 
 
 const router = useRouter()
 
-const username = ref('')
+const email = ref('')
 const password = ref('')
 
-const usernameWarning = ref('')
+const emailWarning = ref('')
 const passwordWarning = ref('')
 
 function validateForm() {
     let isValid = true
 
-    if (!username.value.trim()) {
-        usernameWarning.value = 'Username is required'
+    if (!email.value.trim()) {
+        emailWarning.value = 'Email is required'
+        isValid = false
+    } else if (!/\S+@\S+\.\S+/.test(email.value.trim())) {
+        emailWarning.value = 'Invalid email format'
         isValid = false
     } else {
-        usernameWarning.value = ''
+        emailWarning.value = ''
     }
 
     if (!password.value.trim()) {
@@ -36,18 +38,29 @@ function validateForm() {
     return isValid
 }
 
-function handleSubmit(event: Event) {
-    event.preventDefault()
+async function handleSubmit(event: Event) {
+    event.preventDefault();
     if (validateForm()) {
-        const savedUsername = localStorage.getItem('username')
-        const savedPassword = localStorage.getItem('password')
+        try {
+            await axios.post('http://127.0.0.1:8000/api/user/login', {
+                email: email.value,
+                password: password.value,
+            });
 
-        if (username.value === savedUsername && password.value === savedPassword) {
-            router.push('/dashboard/home')
-        } else {
-            alert('Invalid username or password')
+            alert('Login successful');
+            router.push('/dashboard/home');
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Invalid Credentials. Please try again.');
         }
     }
+}
+
+function resetForm() {
+    email.value = '';
+    password.value = '';
+
 }
 </script>
 
@@ -66,11 +79,11 @@ function handleSubmit(event: Event) {
                     <div class="flex flex-col space-y-4 py-10 px-5">
                         <h1 class="text-2xl font-bold  dark:text-gray-900">Login</h1>
                         <div class="space-y-1">
-                            <Label for="username" class="dark:text-gray-900">Username</Label>
-                            <Input v-model="username" id="username" type="text"
+                            <Label for="email" class="dark:text-gray-900">Admin Email</Label>
+                            <Input v-model="email" id="username" type="text"
                                 class="border-none dark:bg-gray-100 text-gray-900"
-                                :class="{ 'border-red-500': usernameWarning }" />
-                            <span class="text-sm text-red-500">{{ usernameWarning }}</span>
+                                :class="{ 'border-red-500': emailWarning }" />
+                            <span class="text-sm text-red-500">{{ emailWarning }}</span>
                         </div>
 
                         <div class="space-y-1">
@@ -84,8 +97,7 @@ function handleSubmit(event: Event) {
                         <div class="flex justify-center space-x-1">
                             <Button @click="handleSubmit"
                                 class="dark:bg-gray-900 text-gray-200 w-[170px]">Login</Button>
-                            <Button @click="handleSubmit"
-                                class="dark:bg-gray-900 text-gray-200 w-[170px]">Reset</Button>
+                            <Button @click="resetForm" class="dark:bg-gray-900 text-gray-200 w-[170px]">Reset</Button>
                         </div>
 
 

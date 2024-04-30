@@ -56,7 +56,7 @@ async function handleSubmit(event: Event) {
     event.preventDefault();
     if (validateForm()) {
         try {
-            await axios.post('http://127.0.0.1:8000/api/register', {
+            await axios.post('http://127.0.0.1:8000/api/user/register', {
                 name: username.value,
                 email: email.value,
                 password: password.value,
@@ -90,7 +90,7 @@ async function handleSubmit(event: Event) {
                     <div class="flex flex-col space-y-2 py-10 px-5">
                         <h1 class="text-2xl font-bold dark:text-gray-900">Signup</h1>
                         <div class="space-y-1">
-                            <Label for="username" class="dark:text-gray-900">Username</Label>
+                            <Label for="username" class="dark:text-gray-900">Enter Full Name</Label>
                             <Input v-model="username" id="username" type="text"
                                 class="border-none dark:bg-gray-100 text-gray-900"
                                 :class="{ 'border-red-500': passwordWarning }" />

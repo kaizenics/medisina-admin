@@ -19,10 +19,20 @@ import { RouterLink } from 'vue-router';
                         to="/dashboard/home">
                         <span class="mx-4">Home</span>
                     </router-link>
-                    <router-link active-class="shadow"
+                    <!--  <router-link active-class="shadow"
                         :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/orders' ? 'bg-gray-800 border-r-4' : '']"
                         to="/dashboard/orders">
                         <span class="mx-4">Orders</span>
+                    </router-link> -->
+                    <router-link active-class="shadow"
+                        :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/products' ? 'bg-gray-800 border-r-4' : '']"
+                        to="/dashboard/products">
+                        <span class="mx-4">Product Lists</span>
+                    </router-link>
+                    <router-link active-class="shadow"
+                        :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/usermanagement' ? 'bg-gray-800 border-r-4' : '']"
+                        to="/dashboard/usermanagement">
+                        <span class="mx-4">User Management</span>
                     </router-link>
                     <router-link active-class="shadow"
                         :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/settings' ? 'bg-gray-800 border-r-4' : '']"
@@ -30,8 +40,8 @@ import { RouterLink } from 'vue-router';
                         <span class="mx-4">Settings</span>
                     </router-link>
                     <router-link active-class="shadow"
-                        :class="['flex items-center py-4 px-6 text-red-500 border-emerald-600', $route.path === '/chart' ? 'bg-gray-800 border-r-4' : '']"
-                        to="/dashboard/home">
+                        :class="['flex items-center py-4 px-6 text-red-500 border-emerald-600', $route.path === '/' ? 'bg-gray-800 border-r-4' : '']"
+                        to="/">
                         <span class="mx-4">Logout</span>
                     </router-link>
                 </nav>
