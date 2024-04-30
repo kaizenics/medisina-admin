@@ -64,7 +64,7 @@ function resetForm() {
 }
 </script>
 
-<template>
+<template class="dark">
     <div class="font-montserrat container mx-auto">
         <div class="flex justify-center items-center h-screen">
             <div class="flex h-[500px] ">

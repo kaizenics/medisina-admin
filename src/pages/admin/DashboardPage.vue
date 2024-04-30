@@ -8,7 +8,6 @@ import Search from '@/components/dashboard/SearchBar.vue'
 
 import UserNav from '@/components/dashboard/UserNav.vue'
 
-import { Button } from '@/components/ui/button'
 import {
     Card,
     CardContent,
