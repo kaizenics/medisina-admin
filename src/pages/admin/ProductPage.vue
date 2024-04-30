@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { Icon } from '@iconify/vue'
+
 import SideBar from '@/components/SideBar.vue'
 import {
     Table,
@@ -11,17 +13,6 @@ import {
 } from '@/components/ui/table'
 
 import { Input } from '@/components/ui/input'
-
-import {
-    Pagination,
-    PaginationEllipsis,
-    PaginationFirst,
-    PaginationLast,
-    PaginationList,
-    PaginationListItem,
-    PaginationNext,
-    PaginationPrev,
-} from '@/components/ui/pagination'
 
 import {
     Button,
@@ -37,22 +28,55 @@ const products = [
         price: '$250.00',
         status: 'In Stock',
     },
+    {
+        productId: 'PROD-001',
+        productImage: '',
+        productName: 'Apple iPhone 12 Pro Max',
+        category: 'Electronics',
+        quantity: 10,
+        price: '$250.00',
+        status: 'In Stock',
+    },
+
+    {
+        productId: 'PROD-001',
+        productImage: '',
+        productName: 'Apple iPhone 12 Pro Max',
+        category: 'Electronics',
+        quantity: 10,
+        price: '$250.00',
+        status: 'In Stock',
+    },
+
+
 
 ]
 
 const rowsPerPage = 8;
 const currentPage = ref(1);
 
-const startIndex = computed(() => (currentPage.value - 1) * rowsPerPage);
-const endIndex = computed(() => Math.min(currentPage.value * rowsPerPage, products.length));
-const paginatedProducts = computed(() => products.slice(startIndex.value, endIndex.value));
+const totalPages = computed(() => {
+    return Math.ceil(products.length / rowsPerPage);
+});
+
+const paginatedProducts = computed(() => {
+    const start = (currentPage.value - 1) * rowsPerPage;
+    const end = currentPage.value * rowsPerPage;
+    return products.slice(start, end);
+});
+
+function goToPage(page: number) {
+    if (page >= 1 && page <= totalPages.value) {
+        currentPage.value = page;
+    }
+}
 </script>
 
 <template>
     <main class="flex">
         <SideBar />
         <div class="flex-1 justify-between items-center">
-            <div class="p-5">
+            <div class="p-5 h-[720px]">
                 <div class="flex justify-between py-3">
                     <Input type="search" placeholder="Search..." class="md:w-[100px] lg:w-[500px] border" />
                     <Button class="bg-emerald-500 hover:bg-emerald-600 text-white">New Product</Button>
@@ -73,8 +97,8 @@ const paginatedProducts = computed(() => products.slice(startIndex.value, endInd
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <template v-for="(product, index) in paginatedProducts" :key="product.products">
-                            <TableRow v-if="index >= startIndex && index < endIndex">
+                        <template v-for="product in paginatedProducts" :key="product.productId">
+                            <TableRow>
                                 <TableCell class="font-medium">
                                     {{ product.productId }}
                                 </TableCell>
@@ -96,25 +120,38 @@ const paginatedProducts = computed(() => products.slice(startIndex.value, endInd
                     </TableBody>
                 </Table>
             </div>
-            <div class="flex justify-center items-center">
-                <Pagination v-slot="{ page }" :total="100" :sibling-count="1" show-edges :default-page="2">
-                    <PaginationList v-slot="{ items }" class="flex items-center gap-1">
-                        <PaginationFirst />
-                        <PaginationPrev />
 
-                        <template v-for="(item, index) in items">
-                            <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.value" as-child>
-                                <Button class="w-10 h-10 p-0" :variant="item.value === page ? 'default' : 'outline'">
-                                    {{ item.value }}
-                                </Button>
-                            </PaginationListItem>
-                            <PaginationEllipsis v-else :key="item.type" :index="index" />
-                        </template>
+            <div class="mt-5 flex justify-center space-x-2">
+                <div class="space-x-1">
 
-                        <PaginationNext />
-                        <PaginationLast />
-                    </PaginationList>
-                </Pagination>
+                    <Button @click="goToPage(1)" :disabled="currentPage === 1"
+                        class="bg-transparent border hover:bg-gray-200 hover:dark:bg-gray-800">
+                        <Icon icon="material-symbols-light:first-page"
+                            class="h-[1.2rem] w-[1.2rem] text-black dark:text-white" />
+                    </Button>
+                    <Button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
+                        class="bg-transparent border hover:bg-gray-200 hover:dark:bg-gray-800">
+                        <Icon icon="material-symbols-light:navigate-before"
+                            class="h-[1.2rem] w-[1.2rem] text-black dark:text-white" />
+                    </Button>
+                </div>
+                <Button v-for="page in totalPages" :key="page" @click="goToPage(page)"
+                    :class="{ 'text-lg dark:bg-white dark:text-black': currentPage === page, 'text-lg bg-transparent text-black dark:text-white': currentPage !== page, 'hover:bg-gray-200 hover:dark:bg-gray-800': currentPage !== page }"
+                    class="border mx-1">
+                    {{ page }}
+                </Button>
+                <div class="space-x-1">
+                    <Button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages"
+                        class="bg-transparent border hover:bg-gray-200 hover:dark:bg-gray-800">
+                        <Icon icon="material-symbols-light:navigate-next"
+                            class="h-[1.2rem] w-[1.2rem] text-black dark:text-white" />
+                    </Button>
+                    <Button @click="goToPage(totalPages)" :disabled="currentPage === totalPages"
+                        class="bg-transparent border hover:bg-gray-200 hover:dark:bg-gray-800">
+                        <Icon icon="material-symbols-light:last-page"
+                            class="h-[1.2rem] w-[1.2rem] text-black dark:text-white" />
+                    </Button>
+                </div>
             </div>
         </div>
     </main>
