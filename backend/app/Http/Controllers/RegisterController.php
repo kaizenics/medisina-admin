@@ -7,7 +7,7 @@ use App\Models\User;
 
 class RegisterController extends Controller
 {
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $input = $request->all();
 

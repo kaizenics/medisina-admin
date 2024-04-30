@@ -2,30 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Hash;
 
-class LoginController extends Controller
+class AdminLoginController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $credential = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credential)) {
             return response()->json([
                 'status' => true,
-                'message' => 'Logged in'
+                'message' => 'Admin Logged in'
             ]);
         }
         return response()->json([
             'message' => 'Invalid credentials',
         ], 401);
-
-
     }
+
 }
