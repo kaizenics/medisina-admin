@@ -6,7 +6,6 @@ import SignUpPage from '../pages/auth/SignupPage.vue'
 import AdminLogin from '../pages/auth/AdminLogin.vue'
 import AdminSignup from '../pages/auth/AdminSignup.vue'
 import Dashboard from '../pages/admin/DashboardPage.vue'
-import Orders from '../pages/admin/OrdersPage.vue'
 import Settings from '../pages/admin/SettingsPage.vue'
 import Products from '../pages/admin/ProductPage.vue'
 import UserManagement from '../pages/admin/UserManagementPage.vue'
@@ -40,11 +39,6 @@ const router = createRouter({
       component: Dashboard
     },
     {
-      path: '/dashboard/orders',
-      name: 'orders',
-      component: Orders
-    },
-    {
       path: '/dashboard/settings',
       name: 'settings',
       component: Settings
@@ -65,8 +59,8 @@ const router = createRouter({
       component: Products
     },
     {
-      path: '/dashboard/usermanagement',
-      name: 'usermanagement',
+      path: '/dashboard/users',
+      name: 'users',
       component: UserManagement
     },
     {

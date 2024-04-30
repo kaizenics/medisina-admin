@@ -20,20 +20,15 @@ import { RouterLink } from 'vue-router';
                         to="/dashboard/home">
                         <span class="mx-4">Home</span>
                     </router-link>
-                    <!--  <router-link active-class="shadow"
-                        :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/orders' ? 'bg-gray-800 border-r-4' : '']"
-                        to="/dashboard/orders">
-                        <span class="mx-4">Orders</span>
-                    </router-link> -->
                     <router-link active-class="shadow"
                         :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/products' ? 'bg-gray-900 border-r-4' : '']"
                         to="/dashboard/products">
                         <span class="mx-4">Product Lists</span>
                     </router-link>
                     <router-link active-class="shadow"
-                        :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/usermanagement' ? 'bg-gray-900 border-r-4' : '']"
-                        to="/dashboard/usermanagement">
-                        <span class="mx-4">User Management</span>
+                        :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/users' ? 'bg-gray-900 border-r-4' : '']"
+                        to="/dashboard/users">
+                        <span class="mx-4">Users</span>
                     </router-link>
                     <router-link active-class="shadow"
                         :class="['flex items-center py-4 px-6 text-white border-emerald-600', $route.path === '/dashboard/settings' ? 'bg-gray-900 border-r-4' : '']"
