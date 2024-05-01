@@ -12,6 +12,15 @@ import {
     TableRow,
 } from '@/components/ui/table'
 
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+
 import { Input } from '@/components/ui/input'
 
 import {
@@ -21,7 +30,7 @@ import {
 const products = [
     {
         productId: 'PROD-001',
-        productImage: '',
+        productImage: apple12,
         productName: 'Apple iPhone 12 Pro Max',
         category: 'Electronics',
         quantity: 10,
@@ -30,7 +39,7 @@ const products = [
     },
     {
         productId: 'PROD-001',
-        productImage: '',
+        productImage: apple12,
         productName: 'Apple iPhone 12 Pro Max',
         category: 'Electronics',
         quantity: 10,
@@ -40,7 +49,16 @@ const products = [
 
     {
         productId: 'PROD-001',
-        productImage: '',
+        productImage: apple12,
+        productName: 'Apple iPhone 12 Pro Max',
+        category: 'Electronics',
+        quantity: 10,
+        price: '$250.00',
+        status: 'In Stock',
+    },
+    {
+        productId: 'PROD-001',
+        productImage: apple12,
         productName: 'Apple iPhone 12 Pro Max',
         category: 'Electronics',
         quantity: 10,
@@ -48,11 +66,21 @@ const products = [
         status: 'In Stock',
     },
 
-
+    {
+        productId: 'PROD-001',
+        productImage: apple12,
+        productName: 'Apple iPhone 12 Pro Max',
+        category: 'Electronics',
+        quantity: 10,
+        price: '$250.00',
+        status: 'In Stock',
+    },
 
 ]
 
-const rowsPerPage = 8;
+// PAGINATION //
+
+const rowsPerPage = 5;
 const currentPage = ref(1);
 
 const totalPages = computed(() => {
@@ -70,17 +98,65 @@ function goToPage(page: number) {
         currentPage.value = page;
     }
 }
+
+// MODAL
+const isModalOpen = ref(false);
+const newProduct = ref({
+    productImage: '',
+    productName: '',
+    category: '',
+    quantity: 0,
+    price: '$0.00',
+    status: 'In Stock',
+
+});
+
+function openModal() {
+    isModalOpen.value = true;
+}
+
+function addProduct() {
+    products.push({
+        productId: `PROD-${products.length + 1}`,
+        productImage: '',
+        productName: newProduct.value.productName,
+        category: '',
+        quantity: 0,
+        price: '$0.00',
+        status: 'In Stock',
+    });
+    isModalOpen.value = false;
+    newProduct.value = {
+        productImage: '',
+        productName: '',
+        category: '',
+        quantity: 0,
+        price: '$0.00',
+        status: 'In Stock',
+    };
+}
+
+function closeModal() {
+    isModalOpen.value = false;
+}
+
+// IMAGES //
+import apple12 from '@/assets/images/apple.jpg'
+
 </script>
 
 <template>
     <main class="font-montserrat flex">
         <SideBar />
         <div class="flex-1 justify-between items-center">
-            <div class="p-5 mt-10 h-[720px]">
+
+            <!-- Products Table -->
+            <div class="p-5 mt-10 h-[700px]">
                 <h1 class="text-3xl font-bold dark:text-white tracking-tight">Products</h1>
                 <div class="flex justify-between py-3">
                     <Input type="search" placeholder="Search..." class="md:w-[100px] lg:w-[500px] border" />
-                    <Button class="bg-emerald-500 hover:bg-emerald-600 text-white">New Product</Button>
+                    <Button @click="openModal" class="bg-emerald-500 hover:bg-emerald-600 text-white">New
+                        Product</Button>
                 </div>
                 <Table class="border">
                     <TableHeader>
@@ -88,7 +164,7 @@ function goToPage(page: number) {
                             <TableHead class="w-[120px]">
                                 Product ID
                             </TableHead>
-                            <TableHead class="w-[50px]"></TableHead>
+                            <TableHead class="w-[120px]"></TableHead>
                             <TableHead>Product Name</TableHead>
                             <TableHead>Category</TableHead>
                             <TableHead>Quantity</TableHead>
@@ -103,7 +179,9 @@ function goToPage(page: number) {
                                 <TableCell class="font-medium">
                                     {{ product.productId }}
                                 </TableCell>
-                                <TableCell>{{ product.productImage }}</TableCell>
+                                <TableCell>
+                                    <img :src="product.productImage" alt="apple" class="h-[70px]">
+                                </TableCell>
                                 <TableCell>{{ product.productName }}</TableCell>
                                 <TableCell>{{ product.category }}</TableCell>
                                 <TableCell>{{ product.quantity }}</TableCell>
@@ -122,6 +200,7 @@ function goToPage(page: number) {
                 </Table>
             </div>
 
+            <!-- Pagination -->
             <div class="mt-5 flex justify-center space-x-2">
                 <div class="space-x-1">
 
@@ -152,6 +231,64 @@ function goToPage(page: number) {
                         <Icon icon="material-symbols-light:last-page"
                             class="h-[1.2rem] w-[1.5rem] text-black dark:text-white" />
                     </Button>
+                </div>
+            </div>
+
+            <!-- Add Product Modal -->
+            <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-950 bg-opacity-50">
+                <div class="bg-white dark:bg-gray-950 border p-6 rounded-lg shadow-xl w-96">
+                    <h2 class="text-2xl font-bold mb-4">Add New Product</h2>
+                    <form @submit.prevent="addProduct">
+                        <div class="mb-4">
+                            <label for="productName" class="block text-sm font-medium dark:text-white">Product
+                                Name</label>
+                            <Input type="text" id="productName" v-model="newProduct.productName" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="category" class="block text-sm font-medium dark:text-white">Category</label>
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a Category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="electronics">
+                                            Electronics
+                                        </SelectItem>
+                                        <SelectItem value="software">
+                                            Software
+                                        </SelectItem>
+                                        <SelectItem value="hardware">
+                                            Hardware
+                                        </SelectItem>
+                                        <SelectItem value="tools">
+                                            Tools
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="quantity" class="block text-sm font-medium dark:text-white">Quantity</label>
+                            <Input type="text" id="quantity" v-model="newProduct.quantity" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="price" class="block text-sm font-medium dark:text-white">Price</label>
+                            <Input type="text" id="price" v-model="newProduct.price" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="status" class="block text-sm font-medium dark:text-white">Status</label>
+                            <Input type="text" id="status" v-model="newProduct.status" />
+                        </div>
+
+                        <div class="flex justify-end">
+                            <Button type="submit"
+                                class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-md">Add
+                                Product</button>
+                            <Button @click="closeModal" type="button"
+                                class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
