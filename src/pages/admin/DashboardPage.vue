@@ -19,7 +19,7 @@ import {
 </script>
 
 <template>
-    <div class="flex">
+    <div class="font-montserrat flex">
         <SideBar />
         <div class="flex-col flex-1 mt-10">
             <div class="flex-1 space-y-4 p-5 pt-6">

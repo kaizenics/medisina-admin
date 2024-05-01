@@ -73,7 +73,7 @@ function goToPage(page: number) {
 </script>
 
 <template>
-    <main class="flex">
+    <main class="font-montserrat flex">
         <SideBar />
         <div class="flex-1 justify-between items-center">
             <div class="p-5 mt-10 h-[720px]">
