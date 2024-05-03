@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { onMounted } from 'vue';
 import { Icon } from '@iconify/vue'
+import axios from 'axios';
 
 import SideBar from '@/components/SideBar.vue'
 import {
@@ -27,70 +29,80 @@ import {
     Button,
 } from '@/components/ui/button'
 
-const products = [
-    {
-        productId: 'PROD-001',
-        productImage: apple12,
-        productName: 'Apple iPhone 12 Pro Max',
-        category: 'Electronics',
-        quantity: 10,
-        price: '$250.00',
-        status: 'In Stock',
-    },
-    {
-        productId: 'PROD-001',
-        productImage: apple12,
-        productName: 'Apple iPhone 12 Pro Max',
-        category: 'Electronics',
-        quantity: 10,
-        price: '$250.00',
-        status: 'In Stock',
-    },
+const product = ref<Product[]>([]);
+const apiURL = 'http://127.0.0.1:8000/products/';
 
-    {
-        productId: 'PROD-001',
-        productImage: apple12,
-        productName: 'Apple iPhone 12 Pro Max',
-        category: 'Electronics',
-        quantity: 10,
-        price: '$250.00',
-        status: 'In Stock',
-    },
-    {
-        productId: 'PROD-001',
-        productImage: apple12,
-        productName: 'Apple iPhone 12 Pro Max',
-        category: 'Electronics',
-        quantity: 10,
-        price: '$250.00',
-        status: 'In Stock',
-    },
+interface Product {
+  productId: string;
+  productImage: string;
+  productName: string;
+  category: string;
+  quantity: number;
+  price: string;
+  status: string;
+}
 
-    {
-        productId: 'PROD-001',
-        productImage: apple12,
-        productName: 'Apple iPhone 12 Pro Max',
-        category: 'Electronics',
-        quantity: 10,
-        price: '$250.00',
-        status: 'In Stock',
-    },
+onMounted(async () => {
+  const response = await axios.get(apiURL);
+  product.value = response.data;
+});
 
-]
+const allowedCategories = computed(() => ['Electronics', 'Software', 'Hardware', 'Tools']);
+
+
+async function addProduct() {
+    try {
+        if (!newProduct.value.productImage) {
+            newProduct.value.productImage = 'default-image-url.jpg';
+        }
+
+        // Validate the category
+        if (!allowedCategories.value.includes(newProduct.value.category)) {
+            throw new Error('Invalid category selected');
+        }
+
+        const response = await axios.post(apiURL, newProduct.value);
+        product.value.push(response.data as typeof product.value[0]);
+
+        isModalOpen.value = false;
+        newProduct.value = {
+            productImage: '',
+            productName: '',
+            category: '',
+            quantity: 0,
+            price: '',
+            status: 'In Stock',
+        };
+
+        window.location.href = '/dashboard/products';
+    } catch (error) {
+        console.error('Failed to add product', error);
+    }
+}
+
+
+
+async function deleteProduct(productId: any) {
+  try {
+    await axios.delete(`${apiURL}${productId}`);
+    product.value = product.value.filter((product: any) => product.productId !== productId);
+  } catch (error) {
+    console.error('Failed to delete product', error);
+  }
+}
 
 // PAGINATION //
-
 const rowsPerPage = 5;
 const currentPage = ref(1);
 
 const totalPages = computed(() => {
-    return Math.ceil(products.length / rowsPerPage);
+    return Math.ceil(product.value.length / rowsPerPage);
 });
 
 const paginatedProducts = computed(() => {
     const start = (currentPage.value - 1) * rowsPerPage;
     const end = currentPage.value * rowsPerPage;
-    return products.slice(start, end);
+    return product.value.slice(start, end);
 });
 
 function goToPage(page: number) {
@@ -106,42 +118,19 @@ const newProduct = ref({
     productName: '',
     category: '',
     quantity: 0,
-    price: '$0.00',
+    price: '0.00',
     status: 'In Stock',
-
 });
+
 
 function openModal() {
     isModalOpen.value = true;
-}
-
-function addProduct() {
-    products.push({
-        productId: `PROD-${products.length + 1}`,
-        productImage: '',
-        productName: newProduct.value.productName,
-        category: '',
-        quantity: 0,
-        price: '$0.00',
-        status: 'In Stock',
-    });
-    isModalOpen.value = false;
-    newProduct.value = {
-        productImage: '',
-        productName: '',
-        category: '',
-        quantity: 0,
-        price: '$0.00',
-        status: 'In Stock',
-    };
 }
 
 function closeModal() {
     isModalOpen.value = false;
 }
 
-// IMAGES //
-import apple12 from '@/assets/images/apple.jpg'
 
 </script>
 
@@ -185,13 +174,13 @@ import apple12 from '@/assets/images/apple.jpg'
                                 <TableCell>{{ product.productName }}</TableCell>
                                 <TableCell>{{ product.category }}</TableCell>
                                 <TableCell>{{ product.quantity }}</TableCell>
-                                <TableCell>{{ product.price }}</TableCell>
+                                <TableCell>${{ product.price }}</TableCell>
                                 <TableCell>{{ product.status }}</TableCell>
                                 <TableCell class="w-10">
                                     <div class="flex space-x-2">
                                         <Button
                                             class="border bg-transparent text-black dark:text-white hover:bg-transparent hover:border-gray-700">Edit</Button>
-                                        <Button class="border bg-red-500 text-white hover:bg-red-600">Delete</Button>
+                                        <Button  @click="deleteProduct(product.productId)" class="border bg-red-500 text-white hover:bg-red-600">Delete</Button>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -240,29 +229,25 @@ import apple12 from '@/assets/images/apple.jpg'
                     <h2 class="text-2xl font-bold mb-4">Add New Product</h2>
                     <form @submit.prevent="addProduct">
                         <div class="mb-4">
+                            <label for="productImage" class="block text-sm font-medium dark:text-white">Product
+                                Image</label>
+                            <Input type="file" id="productImage" accept="image/*" @change="newProduct.productImage" />
+                        </div>
+                        <div class="mb-4">
                             <label for="productName" class="block text-sm font-medium dark:text-white">Product
                                 Name</label>
                             <Input type="text" id="productName" v-model="newProduct.productName" />
                         </div>
                         <div class="mb-4">
                             <label for="category" class="block text-sm font-medium dark:text-white">Category</label>
-                            <Select>
+                            <Select id="category" v-model="newProduct.category">
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select a Category" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="electronics">
-                                            Electronics
-                                        </SelectItem>
-                                        <SelectItem value="software">
-                                            Software
-                                        </SelectItem>
-                                        <SelectItem value="hardware">
-                                            Hardware
-                                        </SelectItem>
-                                        <SelectItem value="tools">
-                                            Tools
+                                        <SelectItem v-for="category in allowedCategories" :key="category" :value="category">
+                                         {{ category }}
                                         </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
