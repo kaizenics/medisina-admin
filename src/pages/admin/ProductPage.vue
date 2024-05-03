@@ -29,6 +29,8 @@ import {
     Button,
 } from '@/components/ui/button'
 
+
+// ADD PRODUCT //
 const product = ref<Product[]>([]);
 const apiURL = 'http://127.0.0.1:8000/products/';
 
@@ -55,8 +57,6 @@ async function addProduct() {
         if (!newProduct.value.productImage) {
             newProduct.value.productImage = 'default-image-url.jpg';
         }
-
-        // Validate the category
         if (!allowedCategories.value.includes(newProduct.value.category)) {
             throw new Error('Invalid category selected');
         }
@@ -80,8 +80,7 @@ async function addProduct() {
     }
 }
 
-
-
+// DELETE PRODUCT //
 async function deleteProduct(productId: any) {
   try {
     await axios.delete(`${apiURL}${productId}`);
@@ -89,6 +88,39 @@ async function deleteProduct(productId: any) {
   } catch (error) {
     console.error('Failed to delete product', error);
   }
+}
+
+// EIDT/UPDATE PRODUCT //
+
+const selectedProduct = ref<Product | null>(null);
+
+function openEditModal(product: Product) {
+    selectedProduct.value = { ...product };
+    isModalOpen.value = true;
+}
+
+async function editSelectedProduct() {
+    try {
+        if (!selectedProduct.value) {
+            return;
+        }
+
+        if (!selectedProduct.value.productImage) {
+            selectedProduct.value.productImage = 'default-image-url.jpg';
+        }
+        if (!allowedCategories.value.includes(selectedProduct.value.category)) {
+            throw new Error('Invalid category selected');
+        }
+
+        const response = await axios.put(`${apiURL}${selectedProduct.value.productId}`, selectedProduct.value);
+        const index = product.value.findIndex((p) => p.productId === selectedProduct.value?.productId);
+        product.value.splice(index, 1, response.data as typeof product.value[0]);
+
+        isModalOpen.value = false;
+        selectedProduct.value = null;
+    } catch (error) {
+        console.error('Failed to edit product', error);
+    }
 }
 
 // PAGINATION //
@@ -179,7 +211,7 @@ function closeModal() {
                                 <TableCell class="w-10">
                                     <div class="flex space-x-2">
                                         <Button
-                                            class="border bg-transparent text-black dark:text-white hover:bg-transparent hover:border-gray-700">Edit</Button>
+                                            @click="openEditModal(product)" class="border bg-transparent text-black dark:text-white hover:bg-transparent hover:border-gray-700">Edit</Button>
                                         <Button  @click="deleteProduct(product.productId)" class="border bg-red-500 text-white hover:bg-red-600">Delete</Button>
                                     </div>
                                 </TableCell>
@@ -276,6 +308,57 @@ function closeModal() {
                     </form>
                 </div>
             </div>
+
+            <!-- Edit Product Modal -->
+            <div v-if="isModalOpen && selectedProduct" class="fixed inset-0 flex items-center justify-center bg-gray-950 bg-opacity-50">
+                <div class="bg-white dark:bg-gray-950 border p-6 rounded-lg shadow-xl w-96">
+                    <h2 class="text-2xl font-bold mb-4">Edit Product</h2>
+                    <form @submit.prevent="editSelectedProduct">
+                        <div class="mb-4">
+                            <label for="productImage" class="block text-sm font-medium dark:text-white">Product Image</label>
+                            <Input type="file" id="productImage" accept="image/*" @change="selectedProduct.productImage" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="productName" class="block text-sm font-medium dark:text-white">Product Name</label>
+                            <Input type="text" id="productName" v-model="selectedProduct.productName" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="category" class="block text-sm font-medium dark:text-white">Category</label>
+                            <Select id="category" v-model="selectedProduct.category">
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a Category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem v-for="category in allowedCategories" :key="category" :value="category">
+                                            {{ category }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="quantity" class="block text-sm font-medium dark:text-white">Quantity</label>
+                            <Input type="text" id="quantity" v-model="selectedProduct.quantity" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="price" class="block text-sm font-medium dark:text-white">Price</label>
+                            <Input type="text" id="price" v-model="selectedProduct.price" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="status" class="block text-sm font-medium dark:text-white">Status</label>
+                            <Input type="text" id="status" v-model="selectedProduct.status" />
+                        </div>
+
+                        <div class="flex justify-end">
+                            <Button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-md">Edit Product</button>
+                            <Button @click="closeModal" type="button" class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
         </div>
     </main>
 </template>
