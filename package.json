@@ -29,6 +29,7 @@
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "cors": "^2.8.5",
     "embla-carousel-autoplay": "^8.0.2",
     "embla-carousel-vue": "^8.0.2",
     "lucide-vue-next": "^0.367.0",
