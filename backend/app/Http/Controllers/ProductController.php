@@ -9,10 +9,9 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Products::all();
-        return view('products.index', compact('products'));
+        $product = Products::select('id as productId', 'productImage', 'productName', 'category', 'quantity', 'price', 'status')->get();
+        return response()->json($product);
     }
-
     public function create()
     {
         return view('products.create');
@@ -21,13 +20,13 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         Products::create($request->all());
-        return redirect()->route('products.index');
+        return response()->json($request);
     }
 
     public function show($id)
     {
         $product = Products::findOrFail($id);
-        return view('products.show', compact('product'));
+        return response()->json($product);
     }
 
     public function edit($id)
@@ -40,13 +39,13 @@ class ProductController extends Controller
     {
         $product = Products::findOrFail($id);
         $product->update($request->all());
-        return redirect()->route('products.index');
+        return response()->json($product);
     }
 
     public function destroy($id)
     {
         $product = Products::findOrFail($id);
         $product->delete();
-        return redirect()->route('products.index');
+        return response()->json(null, 204);
     }
 }
