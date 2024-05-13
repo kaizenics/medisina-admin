@@ -8,6 +8,7 @@ import AdminSignup from '../pages/auth/AdminSignup.vue'
 import Dashboard from '../pages/admin/DashboardPage.vue'
 import Settings from '../pages/admin/SettingsPage.vue'
 import Products from '../pages/admin/ProductPage.vue'
+import Statistics from '../pages/admin/StatisticsPage.vue'
 import UserManagement from '../pages/admin/UserManagementPage.vue'
 
 const router = createRouter({
@@ -62,6 +63,11 @@ const router = createRouter({
       path: '/dashboard/users',
       name: 'users',
       component: UserManagement
+    },
+    {
+      path: '/dashboard/statistics',
+      name: 'statistics',
+      component: Statistics
     },
     {
       path: '/signup/admin',
