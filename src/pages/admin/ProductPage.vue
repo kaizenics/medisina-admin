@@ -29,44 +29,53 @@ import {
     Button,
 } from '@/components/ui/button'
 
-
 // ADD PRODUCT //
 const product = ref<Product[]>([]);
 const apiURL = 'http://127.0.0.1:8000/products/';
 
 interface Product {
-  productId: string;
-  productImage: string;
-  productName: string;
-  category: string;
-  quantity: number;
-  price: string;
-  status: string;
+    productId: string;
+    productImage: string;
+    productName: string;
+    category: string;
+    quantity: number;
+    price: string;
+    status: string;
 }
 
 onMounted(async () => {
-  const response = await axios.get(apiURL);
-  product.value = response.data;
+    const response = await axios.get(apiURL);
+    product.value = response.data;
 });
 
 const allowedCategories = computed(() => ['Electronics', 'Software', 'Hardware', 'Tools']);
 
-
 async function addProduct() {
     try {
-        if (!newProduct.value.productImage) {
-            newProduct.value.productImage = 'default-image-url.jpg';
+        const formData = new FormData();
+        if (newProduct.value.productImage) {
+            formData.append('productImage', newProduct.value.productImage);
         }
+        formData.append('productName', newProduct.value.productName);
+        formData.append('category', newProduct.value.category);
+        formData.append('quantity', newProduct.value.quantity.toString());
+        formData.append('price', newProduct.value.price);
+        formData.append('status', newProduct.value.status);
+
         if (!allowedCategories.value.includes(newProduct.value.category)) {
             throw new Error('Invalid category selected');
         }
 
-        const response = await axios.post(apiURL, newProduct.value);
+        const response = await axios.post(apiURL, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
         product.value.push(response.data as typeof product.value[0]);
 
         isModalOpen.value = false;
         newProduct.value = {
-            productImage: '',
+            productImage: null,
             productName: '',
             category: '',
             quantity: 0,
@@ -80,17 +89,38 @@ async function addProduct() {
     }
 }
 
-// DELETE PRODUCT //
-async function deleteProduct(productId: any) {
-  try {
-    await axios.delete(`${apiURL}${productId}`);
-    product.value = product.value.filter((product: any) => product.productId !== productId);
-  } catch (error) {
-    console.error('Failed to delete product', error);
-  }
+function handleImageUpload(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+        newProduct.value.productImage = file;
+    }
 }
 
-// EIDT/UPDATE PRODUCT //
+function updateSelectedProductImage(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+        if (selectedProduct.value) {
+            selectedProduct.value.productImage = file;
+        }
+    }
+}
+
+
+// DELETE PRODUCT //
+async function deleteProduct(productId: any) {
+    try {
+        await axios.delete(`${apiURL}${productId}`);
+        product.value = product.value.filter((product: any) => product.productId !== productId);
+    } catch (error) {
+        console.error('Failed to delete product', error);
+    }
+}
+
+// EDIT/UPDATE PRODUCT //
+
+/* NOTE: Fetching the ProductImage is not functional and needs to be fixed. 
+   All are working and it can fetched from the backend except the productImage.
+*/
 
 const selectedProduct = ref<Product | null>(null);
 
@@ -123,7 +153,10 @@ async function editSelectedProduct() {
     }
 }
 
+
 // PAGINATION //
+const searchTerm = ref('');
+
 const rowsPerPage = 5;
 const currentPage = ref(1);
 
@@ -134,9 +167,14 @@ const totalPages = computed(() => {
 const paginatedProducts = computed(() => {
     const start = (currentPage.value - 1) * rowsPerPage;
     const end = currentPage.value * rowsPerPage;
-    return product.value.slice(start, end);
+    return product.value.filter((product: Product) => {
+        const productNameMatch = product.productName.toLowerCase().includes(searchTerm.value.toLowerCase());
+        const categoryMatch = product.category.toLowerCase().includes(searchTerm.value.toLowerCase());
+        const productIdMatch = product.productId.toString().includes(searchTerm.value);
+        const priceMatch = product.price.toString().includes(searchTerm.value);
+        return productNameMatch || categoryMatch || productIdMatch || priceMatch;
+    }).slice(start, end);
 });
-
 function goToPage(page: number) {
     if (page >= 1 && page <= totalPages.value) {
         currentPage.value = page;
@@ -146,7 +184,7 @@ function goToPage(page: number) {
 // MODAL
 const isModalOpen = ref(false);
 const newProduct = ref({
-    productImage: '',
+    productImage: null,
     productName: '',
     category: '',
     quantity: 0,
@@ -175,7 +213,8 @@ function closeModal() {
             <div class="p-5 mt-10 h-[700px]">
                 <h1 class="text-3xl font-bold dark:text-white tracking-tight">Products</h1>
                 <div class="flex justify-between py-3">
-                    <Input type="search" placeholder="Search..." class="md:w-[100px] lg:w-[500px] border" />
+                    <Input type="search" placeholder="Search..." class="md:w-[100px] lg:w-[500px] border"
+                        v-model="searchTerm" />
                     <Button @click="openModal" class="bg-emerald-500 hover:bg-emerald-600 text-white">New
                         Product</Button>
                 </div>
@@ -201,18 +240,20 @@ function closeModal() {
                                     {{ product.productId }}
                                 </TableCell>
                                 <TableCell>
-                                    <img :src="product.productImage" alt="apple" class="h-[70px]">
+                                    <img :src="'/backend/public/assets/images/uploaded-images/' + product.productImage"
+                                        alt="" class="h-[70px]">
                                 </TableCell>
                                 <TableCell>{{ product.productName }}</TableCell>
                                 <TableCell>{{ product.category }}</TableCell>
                                 <TableCell>{{ product.quantity }}</TableCell>
-                                <TableCell>${{ product.price }}</TableCell>
+                                <TableCell>₱{{ product.price }}</TableCell>
                                 <TableCell>{{ product.status }}</TableCell>
                                 <TableCell class="w-10">
                                     <div class="flex space-x-2">
-                                        <Button
-                                            @click="openEditModal(product)" class="border bg-transparent text-black dark:text-white hover:bg-transparent hover:border-gray-700">Edit</Button>
-                                        <Button  @click="deleteProduct(product.productId)" class="border bg-red-500 text-white hover:bg-red-600">Delete</Button>
+                                        <Button @click="openEditModal(product)"
+                                            class="border bg-transparent text-black dark:text-white hover:bg-transparent hover:border-gray-700">Edit</Button>
+                                        <Button @click="deleteProduct(product.productId)"
+                                            class="border bg-red-500 text-white hover:bg-red-600">Delete</Button>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -263,7 +304,7 @@ function closeModal() {
                         <div class="mb-4">
                             <label for="productImage" class="block text-sm font-medium dark:text-white">Product
                                 Image</label>
-                            <Input type="file" id="productImage" accept="image/*" @change="newProduct.productImage" />
+                            <Input type="file" id="productImage" accept="image/*" @change="handleImageUpload" />
                         </div>
                         <div class="mb-4">
                             <label for="productName" class="block text-sm font-medium dark:text-white">Product
@@ -278,8 +319,9 @@ function closeModal() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem v-for="category in allowedCategories" :key="category" :value="category">
-                                         {{ category }}
+                                        <SelectItem v-for="category in allowedCategories" :key="category"
+                                            :value="category">
+                                            {{ category }}
                                         </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
@@ -310,16 +352,20 @@ function closeModal() {
             </div>
 
             <!-- Edit Product Modal -->
-            <div v-if="isModalOpen && selectedProduct" class="fixed inset-0 flex items-center justify-center bg-gray-950 bg-opacity-50">
+            <div v-if="isModalOpen && selectedProduct"
+                class="fixed inset-0 flex items-center justify-center bg-gray-950 bg-opacity-50">
                 <div class="bg-white dark:bg-gray-950 border p-6 rounded-lg shadow-xl w-96">
-                    <h2 class="text-2xl font-bold mb-4">Edit Product</h2>
+                    <h2 class="text-2xl font-bold mb-4">Update Product</h2>
                     <form @submit.prevent="editSelectedProduct">
                         <div class="mb-4">
-                            <label for="productImage" class="block text-sm font-medium dark:text-white">Product Image</label>
-                            <Input type="file" id="productImage" accept="image/*" @change="selectedProduct.productImage" />
+                            <label for="productImage" class="block text-sm font-medium dark:text-white">Product
+                                Image</label>
+                            <Input type="file" id="productImage" accept="image/*"
+                                @change="updateSelectedProductImage($event)" />
                         </div>
                         <div class="mb-4">
-                            <label for="productName" class="block text-sm font-medium dark:text-white">Product Name</label>
+                            <label for="productName" class="block text-sm font-medium dark:text-white">Product
+                                Name</label>
                             <Input type="text" id="productName" v-model="selectedProduct.productName" />
                         </div>
                         <div class="mb-4">
@@ -330,7 +376,8 @@ function closeModal() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem v-for="category in allowedCategories" :key="category" :value="category">
+                                        <SelectItem v-for="category in allowedCategories" :key="category"
+                                            :value="category">
                                             {{ category }}
                                         </SelectItem>
                                     </SelectGroup>
@@ -351,8 +398,11 @@ function closeModal() {
                         </div>
 
                         <div class="flex justify-end">
-                            <Button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-md">Edit Product</button>
-                            <Button @click="closeModal" type="button" class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md">Cancel</button>
+                            <Button type="submit"
+                                class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-md">Update
+                                Product</button>
+                            <Button @click="closeModal" type="button"
+                                class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md">Cancel</button>
                         </div>
                     </form>
                 </div>
