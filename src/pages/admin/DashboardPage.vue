@@ -1,151 +1,188 @@
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue'
-import RecentSales from '@/components/dashboard/RecentSales.vue'
-import Overview from '@/components/dashboard/OverviewBar.vue'
-
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
+import { ref, onMounted, computed } from 'vue';
+import { Icon } from '@iconify/vue';
+import axios from 'axios';
+import { Input } from '@/components/ui/input'
+import { Card, CardDescription, CardTitle } from '@/components/ui/card'
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from '@/components/ui/tabs'
+
+const productItems = ref<Product[]>([]);
+
+interface Product {
+    productImage: null,
+    productName: string,
+    category: string,
+    quantity: number,
+    price: string,
+    status: string,
+}
+
+
+function shuffleArray(array: any[]) {
+    let currentIndex = array.length, randomIndex;
+
+    while (currentIndex !== 0) {
+
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+}
+
+onMounted(async () => {
+    try {
+        const response = await axios.get('http://127.0.0.1:8000/products');
+        productItems.value = response.data;
+    } catch (error) {
+        console.error('Failed to fetch users', error);
+    }
+})
+
+const shuffledProducts = computed(() => shuffleArray([...productItems.value]));
+
+function getProductsByCategory(category: string) {
+    return shuffledProducts.value.filter(product => product.category === category);
+}
+
+// SEARCH BAR //
+const searchTerm = ref('');
+
+const filteredProducts = computed(() =>
+    shuffledProducts.value.filter(product =>
+        product.productName.toLowerCase().includes(searchTerm.value.toLowerCase())
+    )
+);
+
 </script>
 
 <template>
     <div class="font-montserrat flex">
         <SideBar />
-        <div class="flex-col flex-1 mt-10">
-            <div class="flex-1 space-y-4 p-5 pt-6">
-                <div class="flex items-center justify-between space-y-2">
-                    <h2 class="text-3xl font-bold tracking-tight">
-                        Dashboard
-                    </h2>
+        <div class="flex-1 justify-between items-center">
+            <div class="p-5 mt-10 space-y-4">
+                <h1 class="text-3xl font-bold">Home</h1>
+                <Input type="search" placeholder="Search..." class="md:w-[100px] lg:w-[500px] border"
+                    v-model="searchTerm" />
+            </div>
+            <div>
+                <div class="flex mx-5 space-x-1 bg-red-500 w-[240px] h-[40px] py-1.5 px-1.5">
+                    <Icon icon="mdi:hot" class="h-[1.8rem] w-[1.8rem] text-white" />
+                    <h1 class="text-white font-semibold text-lg text-center">Best Seller Products</h1>
                 </div>
-                <Tabs default-value="overview" class="space-y-4">
-                    <TabsList>
-                        <TabsTrigger value="overview">
-                            Overview
-                        </TabsTrigger>
-                        <TabsTrigger value="notifications">
-                            Notifications
-                        </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="overview" class="space-y-4">
-                        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                            <Card>
-                                <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle class="text-sm font-medium">
-                                        Total Revenue
-                                    </CardTitle>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                        strokeWidth="2" class="h-4 w-4 text-muted-foreground">
-                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div class="text-2xl font-bold">
-                                        $45,231.89
-                                    </div>
-                                    <p class="text-xs text-muted-foreground">
-                                        +20.1% from last month
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle class="text-sm font-medium">
-                                        Subscriptions
-                                    </CardTitle>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                        strokeWidth="2" class="h-4 w-4 text-muted-foreground">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                        <circle cx="9" cy="7" r="4" />
-                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div class="text-2xl font-bold">
-                                        +2350
-                                    </div>
-                                    <p class="text-xs text-muted-foreground">
-                                        +180.1% from last month
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle class="text-sm font-medium">
-                                        Sales
-                                    </CardTitle>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                        strokeWidth="2" class="h-4 w-4 text-muted-foreground">
-                                        <rect width="20" height="14" x="2" y="5" rx="2" />
-                                        <path d="M2 10h20" />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div class="text-2xl font-bold">
-                                        +12,234
-                                    </div>
-                                    <p class="text-xs text-muted-foreground">
-                                        +19% from last month
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle class="text-sm font-medium">
-                                        Active Now
-                                    </CardTitle>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                        strokeWidth="2" class="h-4 w-4 text-muted-foreground">
-                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div class="text-2xl font-bold">
-                                        +573
-                                    </div>
-                                    <p class="text-xs text-muted-foreground">
-                                        +201 since last hour
-                                    </p>
-                                </CardContent>
-                            </Card>
+                <div class="grid grid-cols-5 gap-4 p-3">
+                    <Card v-for="product in filteredProducts.slice(0, 5)" :key="product.productName" class="h-[270px]">
+                        <div class="flex justify-center py-5">
+                            <img :src="'/backend/public/assets/images/uploaded-images/' + product.productImage"
+                                alt="product" class="w-[100px] h-[100px]" />
                         </div>
-                        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                            <Card class="col-span-4">
-                                <CardHeader>
-                                    <CardTitle>Overview</CardTitle>
-                                </CardHeader>
-                                <CardContent class="pl-2">
-                                    <Overview />
-                                </CardContent>
-                            </Card>
-                            <Card class="col-span-3">
-                                <CardHeader>
-                                    <CardTitle>Recent Sales</CardTitle>
-                                    <CardDescription>
-                                        You made 265 sales this month.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <RecentSales />
-                                </CardContent>
-                            </Card>
+                        <div class="flex flex-col justify-center text-center h-[120px]  mx-2">
+                            <CardTitle>{{ product.productName }}</CardTitle>
+                            <CardDescription>{{ product.category }}</CardDescription>
+                            <span>₱{{ product.price }}</span>
                         </div>
-                    </TabsContent>
-                </Tabs>
+                    </Card>
+                </div>
+            </div>
+            <div>
+                <div class="space-y-3">
+                    <div class="flex mx-5 space-x-1 bg-emerald-600 w-[150px] h-[40px] py-1.5 px-1.5">
+                        <Icon icon="carbon:collapse-categories" class="h-[1.8rem] w-[1.8rem] text-white" />
+                        <h1 class="text-white font-semibold text-lg text-center">Categories</h1>
+                    </div>
+                    <Tabs default-value="electronics" class="mx-4 space-y-4">
+                        <TabsList>
+                            <TabsTrigger value="electronics">
+                                Electronics
+                            </TabsTrigger>
+                            <TabsTrigger value="software">
+                                Software
+                            </TabsTrigger>
+                            <TabsTrigger value="hardware">
+                                Hardware
+                            </TabsTrigger>
+                            <TabsTrigger value="tools">
+                                Tools
+                            </TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="electronics" class="space-y-4">
+                            <div class="grid grid-cols-5 gap-4 p-3">
+                                <Card v-for="product in getProductsByCategory('Electronics')" :key="product.productName"
+                                    class="h-[270px]">
+                                    <div class="flex justify-center py-5">
+                                        <img :src="'/backend/public/assets/images/uploaded-images/' + product.productImage"
+                                            alt="product" class="w-[100px] h-[100px]" />
+                                    </div>
+                                    <div class="flex flex-col justify-center text-center h-[120px]  mx-2">
+                                        <CardTitle>{{ product.productName }}</CardTitle>
+                                        <CardDescription>{{ product.category }}</CardDescription>
+                                        <span>₱{{ product.price }}</span>
+                                    </div>
+                                </Card>
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="software" class="space-y-4">
+                            <div class="grid grid-cols-5 gap-4 p-3">
+                                <Card v-for="product in getProductsByCategory('Software')" :key="product.productName"
+                                    class="h-[270px]">
+                                    <div class="flex justify-center py-5">
+                                        <img :src="'/backend/public/assets/images/uploaded-images/' + product.productImage"
+                                            alt="product" class="w-[100px] h-[100px]" />
+                                    </div>
+                                    <div class="flex flex-col justify-center text-center h-[120px]  mx-2">
+                                        <CardTitle>{{ product.productName }}</CardTitle>
+                                        <CardDescription>{{ product.category }}</CardDescription>
+                                        <span>₱{{ product.price }}</span>
+                                    </div>
+                                </Card>
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="hardware" class="space-y-4">
+                            <div class="grid grid-cols-5 gap-4 p-3">
+                                <Card v-for="product in getProductsByCategory('Hardware')" :key="product.productName"
+                                    class="h-[270px]">
+                                    <div class="flex justify-center py-5">
+                                        <img :src="'/backend/public/assets/images/uploaded-images/' + product.productImage"
+                                            alt="product" class="w-[100px] h-[100px]" />
+                                    </div>
+                                    <div class="flex flex-col justify-center text-center h-[120px]  mx-2">
+                                        <CardTitle>{{ product.productName }}</CardTitle>
+                                        <CardDescription>{{ product.category }}</CardDescription>
+                                        <span>₱{{ product.price }}</span>
+                                    </div>
+                                </Card>
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="tools" class="space-y-4">
+                            <div class="grid grid-cols-5 gap-4 p-3">
+                                <Card v-for="product in getProductsByCategory('Tools')" :key="product.productName"
+                                    class="h-[270px]">
+                                    <div class="flex justify-center py-5">
+                                        <img :src="'/backend/public/assets/images/uploaded-images/' + product.productImage"
+                                            alt="product" class="w-[100px] h-[100px]" />
+                                    </div>
+                                    <div class="flex flex-col justify-center text-center h-[120px]  mx-2">
+                                        <CardTitle>{{ product.productName }}</CardTitle>
+                                        <CardDescription>{{ product.category }}</CardDescription>
+                                        <span>₱{{ product.price }}</span>
+                                    </div>
+                                </Card>
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+
+                </div>
+
+
             </div>
         </div>
     </div>
