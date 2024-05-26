@@ -83,6 +83,7 @@ async function addProduct() {
             status: 'In Stock',
         };
 
+        alert('Product added successfully!');
         window.location.href = '/dashboard/products';
     } catch (error) {
         console.error('Failed to add product', error);
@@ -108,6 +109,13 @@ function updateSelectedProductImage(event: any) {
 
 // DELETE PRODUCT //
 async function deleteProduct(productId: any) {
+    const confirmation = window.confirm(
+        "Are you sure you want to remove this item?"
+    );
+    if (!confirmation) {
+        return;
+    }
+
     try {
         await axios.delete(`${apiURL}${productId}`);
         product.value = product.value.filter((product: any) => product.productId !== productId);
@@ -148,6 +156,9 @@ async function editSelectedProduct() {
 
         isModalOpen.value = false;
         selectedProduct.value = null;
+
+        alert('Product updated successfully!');
+        window.location.href = '/dashboard/products';
     } catch (error) {
         console.error('Failed to edit product', error);
     }
@@ -205,6 +216,7 @@ function closeModal() {
 </script>
 
 <template>
+    <Toaster richColors />
     <main class="font-montserrat flex">
         <SideBar />
         <div class="flex-1 justify-between items-center">

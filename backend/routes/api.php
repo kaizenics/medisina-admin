@@ -7,6 +7,8 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 
+use App\Http\Controllers\ItemsController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes

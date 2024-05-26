@@ -29,15 +29,18 @@ import {
                             and automatically switch between day and night themes.</CardDescription>
                         <Separator class="my-4" />
                         <div class="flex space-x-1">
-                            <div @click="mode = 'light'" class="space-y-2 p-2 border rounded bg-transparent dark:text-white cursor-pointer">
+                            <div @click="mode = 'light'"
+                                class="space-y-2 p-2 border rounded bg-transparent dark:text-white cursor-pointer">
                                 <img :src="lightTheme" alt="Light Theme" class="border rounded w-[170px] h-[100px]" />
                                 <h1>Light</h1>
                             </div>
-                            <div @click="mode = 'dark'" class="space-y-2 p-2 border rounded bg-transparent dark:text-white cursor-pointer">
+                            <div @click="mode = 'dark'"
+                                class="space-y-2 p-2 border rounded bg-transparent dark:text-white cursor-pointer">
                                 <img :src="darkTheme" alt="Dark Theme" class="border w-[170px] h-[100px]" />
                                 <h1>Dark</h1>
                             </div>
-                            <div @click="mode = 'auto'" class="space-y-2 p-2 border rounded bg-transparent dark:text-white cursor-pointer">
+                            <div @click="mode = 'auto'"
+                                class="space-y-2 p-2 border rounded bg-transparent dark:text-white cursor-pointer">
                                 <img :src="systemTheme" alt="System Theme" class="border rounded w-[170px] h-[100px]" />
                                 <h1>System</h1>
                             </div>

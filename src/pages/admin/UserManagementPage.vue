@@ -43,7 +43,7 @@ onMounted(async () => {
                     <Input type="search" placeholder="Search..." class="md:w-[100px] lg:w-[500px] border" />
                     <router-link to="/signup/admin"><Button
                             class="bg-emerald-500 hover:bg-emerald-600 text-white">Register New
-                            user
+                            Admin
                         </Button></router-link>
                 </div>
                 <div class="grid grid-cols-4 gap-4 px-14">

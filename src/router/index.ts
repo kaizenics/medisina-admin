@@ -11,6 +11,8 @@ import Products from '../pages/admin/ProductPage.vue'
 import Statistics from '../pages/admin/StatisticsPage.vue'
 import UserManagement from '../pages/admin/UserManagementPage.vue'
 
+import Charts from '../pages/ChartPage.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -73,6 +75,11 @@ const router = createRouter({
       path: '/signup/admin',
       name: 'admin-register',
       component: AdminSignup
+    },
+    {
+      path: '/charts',
+      name: 'charts',
+      component: Charts
     }
   ]
 })

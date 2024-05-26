@@ -1,5 +1,15 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+const logout = () => {
+    const confirmation = window.confirm("Are you sure you want to logout?");
+    if (confirmation) {
+
+        router.push('/');
+    }
+};
 </script>
 
 <template>
@@ -36,11 +46,11 @@ import { RouterLink } from 'vue-router';
                     to="/dashboard/settings">
                     <span class="mx-4">Settings</span>
                 </router-link>
-                <router-link active-class="shadow"
-                    :class="['flex items-center py-4 px-6 text-red-500 border-emerald-600', $route.path === '/' ? 'bg-gray-900 border-r-4' : '']"
-                    to="/">
+                <div active-class="shadow"
+                    :class="['flex items-center py-4 px-6 text-red-500 border-emerald-600 cursor-pointer', $route.path === '/' ? 'bg-gray-900 border-r-4' : '']"
+                    @click="logout">
                     <span class="mx-4">Logout</span>
-                </router-link>
+                </div>
             </nav>
         </div>
 
